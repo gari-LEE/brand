@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>브랜드실 홈페이지 업데이트 정리</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366F1;
+            --secondary-color: #8B5CF6;
+            --accent-color: #EC4899;
+            --background-color: #F9FAFB;
+            --card-color: #FFFFFF;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+            --hover-color: #F3F4F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            position: relative;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            /* 배경색만 유지, 이미지는 ::before에서 처리 */
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* 배경 이미지를 투명하게 표현하기 위한 레이어 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("images/bg-notice-board.jpg.png") no-repeat center center fixed;
+            background-size: cover;
+            opacity: 0.85;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .notice-form {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-container {
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group label {
+            display: inline-block;
+            margin-bottom: 0;
+        }
+
+        .filter-container select {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--card-color);
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 10px 40px 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .search-icon:hover {
+            color: var(--primary-color);
+        }
+
+        .manager-input {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            width: 150px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .manager-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* 관리자 필터 그룹을 오른쪽으로 정렬 */
+        .manager-group {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            white-space: nowrap;  /* 텍스트 줄 바꿈 방지 */
+        }
+
+        .notice-item {
+            background-color: var(--card-color);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notice-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .notice-item h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notice-content {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: none;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .notice-item.expanded .notice-content {
+            display: block;
+        }
+
+        .notice-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .notice-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notice-date i {
+            color: var(--primary-color);
+        }
+
+        .notice-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .expand-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .notice-item.expanded .expand-btn i {
+            transform: rotate(180deg);
+        }
+
+        .delete-btn {
+            background: linear-gradient(45deg, #DC2626, #B91C1C);
+            color: rgba(255, 255, 255, 0.95);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(45deg, #B91C1C, #991B1B);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .date-picker {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: var(--card-color);
+            color: var(--text-primary);
+        }
+
+        .calendar-popup {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background: var(--card-color);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .calendar-popup.show {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 5px;
+        }
+
+        .calendar-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .calendar-nav button {
+            background-color: var(--hover-color);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prev-month, .next-month {
+            width: 32px;
+            height: 32px;
+            font-size: 1rem;
+            padding: 0;
+        }
+
+        .today-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+            color: white !important;
+            padding: 8px 16px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            height: 32px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin-left: 8px !important;
+        }
+
+        .today-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-day-names {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day:hover {
+            background-color: var(--hover-color);
+        }
+
+        .calendar-day.today {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .calendar-day.selected {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .no-notices {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px;
+            background-color: var(--card-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 페이지네이션 스타일 */
+        .pagination {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .page-link {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s;
+        }
+        .page-link.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .page-link:hover {
+            background: var(--hover-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>브랜드실 홈페이지 업데이트 정리</h1>
+        </div>
+        
+        <div class="notice-form">
+            <h2>새 공지사항 작성</h2>
+            <form id="noticeForm">
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" required maxlength="1000"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="manager">담당자</label>
+                    <input type="text" id="manager" required maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="noticeDate">날짜</label>
+                    <div class="date-picker">
+                        <input type="text" id="noticeDate" class="date-input" readonly required>
+                        <div class="calendar-popup" id="calendarPopup">
+                            <div class="calendar-header">
+                                <button type="button" class="prev-month">◀</button>
+                                <div class="calendar-title">2023년 11월</div>
+                                <div class="calendar-nav">
+                                    <button type="button" class="next-month">▶</button>
+                                    <button type="button" class="today-btn">Today</button>
+                                </div>
+                            </div>
+                            <div class="calendar-day-names">
+                                <div class="calendar-day-name">일</div>
+                                <div class="calendar-day-name">월</div>
+                                <div class="calendar-day-name">화</div>
+                                <div class="calendar-day-name">수</div>
+                                <div class="calendar-day-name">목</div>
+                                <div class="calendar-day-name">금</div>
+                                <div class="calendar-day-name">토</div>
+                            </div>
+                            <div class="calendar-grid" id="calendarGrid"></div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit">공지사항 등록</button>
+            </form>
+        </div>
+
+        <div class="notice-list">
+            <h2>공지사항 목록</h2>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label for="yearFilter">년도:</label>
+                    <select id="yearFilter"></select>
+                    <label for="monthFilter">월:</label>
+                    <select id="monthFilter"></select>
+                    <div class="manager-group">
+                        <label for="managerFilter">담당자 : </label>
+                        <input type="text" id="managerFilter" class="manager-input" placeholder="담당자">
+                    </div>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="검색어를 입력하세요...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+            <div id="noticeContainer"></div>
+            <div id="pagination" class="pagination"></div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수로 notices 배열 선언
+        let notices = [];
+        // 검색, 필터 변수
+        let searchKeyword = '';
+        let managerFilterValue = '';
+        let selectedYear = new Date().getFullYear();
+        let selectedMonth = new Date().getMonth() + 1;
+        // 페이지네이션 변수
+        let currentPage = 1;
+        const itemsPerPage = 5;
+
+        // 달력 관련 변수
+        let currentDate = new Date();
+        let selectedDate = null;
+
+        // 페이지 로드 시 실행되는 함수 (Electron IPC 사용)
+        window.onload = async function() {
+            await loadNotices();
+            initCalendar();
+            initFilters();
+            initSearch();
+            initManagerFilter();
+            displayNotices();
+        };
+
+        // 공지사항 로드 함수 (Electron IPC)
+        async function loadNotices() {
+            if (window.electronAPI) {
+                // Electron 환경: 로컬 파일에서
+                notices = await window.electronAPI.loadNotices();
+            } else {
+                // 웹 환경: localStorage에서
+                const stored = localStorage.getItem('notices');
+                notices = stored ? JSON.parse(stored) : [];
+            }
+        }
+
+        // 공지사항 저장 함수 (Electron IPC)
+        async function saveNotices() {
+            try {
+                const sortedNotices = [...notices].sort((a, b) => 
+                    new Date(b.date) - new Date(a.date)
+                );
+                const validNotices = sortedNotices.filter(notice => 
+                    notice.id && 
+                    notice.title && 
+                    notice.content && 
+                    notice.date
+                );
+                if (window.electronAPI) {
+                    await window.electronAPI.saveNotices(validNotices);
+                } else {
+                    localStorage.setItem('notices', JSON.stringify(validNotices));
+                }
+            } catch (error) {
+                console.error('공지사항 저장 중 오류 발생:', error);
+                alert('공지사항 저장 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 날짜 포맷 함수 (달력 및 입력 필드 초기화에 필요)
+        function formatDate(date) {
+            const d = new Date(date);
+            return d.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // HTML 이스케이프 함수 (사용자 입력 XSS 방지)
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 캘린더 초기화 함수
+        function initCalendar() {
+            const dateInput = document.getElementById('noticeDate');
+            const calendarPopup = document.getElementById('calendarPopup');
+            
+            // 오늘 날짜로 초기화
+            selectedDate = new Date();
+            dateInput.value = formatDate(selectedDate);
+            
+            // 달력 표시/숨김 처리
+            dateInput.addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                calendarPopup.classList.add('show');
+            });
+            
+            // 달력 외부 클릭 시 닫기
+            document.addEventListener('click', (e) => {
+                if (!dateInput.contains(e.target) && !calendarPopup.contains(e.target)) {
+                    calendarPopup.classList.remove('show');
+                }
+            });
+            
+            // 월 이동 버튼 이벤트
+            document.querySelector('.prev-month').addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+            
+            document.querySelector('.next-month').addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+            
+            // Today 버튼 이벤트
+            document.querySelector('.today-btn').addEventListener('click', (e) => {
+                e.preventDefault(); e.stopPropagation();
+                selectedDate = new Date();
+                currentDate = new Date();
+                dateInput.value = formatDate(selectedDate);
+                updateCalendar();
+            });
+            
+            updateCalendar();
+        }
+
+        // 달력 업데이트 함수
+        function updateCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.querySelector('.calendar-title').textContent = `${year}년 ${month + 1}월`;
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            const firstDayOfWeek = firstDay.getDay();
+            const totalDays = lastDay.getDate();
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            // 이전 달 날짜들
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const prevDate = new Date(year, month, -i);
+                calendarGrid.appendChild(createDayElement(prevDate, true));
+            }
+            
+            // 현재 달 날짜들
+            for (let i = 1; i <= totalDays; i++) {
+                const date = new Date(year, month, i);
+                calendarGrid.appendChild(createDayElement(date, false));
+            }
+            
+            // 다음 달 날짜들
+            const remaining = 42 - (firstDayOfWeek + totalDays);
+            for (let i = 1; i <= remaining; i++) {
+                const nextDate = new Date(year, month + 1, i);
+                calendarGrid.appendChild(createDayElement(nextDate, true));
+            }
+        }
+
+        // 날짜 요소 생성 함수
+        function createDayElement(date, isOtherMonth) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            if (isOtherMonth) dayElement.classList.add('other-month');
+            
+            const today = new Date();
+            if (date.toDateString() === today.toDateString()) {
+                dayElement.classList.add('today');
+            }
+            
+            if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+                dayElement.classList.add('selected');
+            }
+            
+            dayElement.textContent = date.getDate();
+            dayElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!isOtherMonth) {
+                    selectedDate = date;
+                    document.getElementById('noticeDate').value = formatDate(date);
+                    updateCalendar();
+                }
+            });
+            
+            return dayElement;
+        }
+
+        // 필터 초기화 함수
+        function initFilters() {
+            const yearFilter = document.getElementById('yearFilter');
+            const monthFilter = document.getElementById('monthFilter');
+
+            // 년도 옵션 추가 (전체 포함)
+            const allYearOption = document.createElement('option');
+            allYearOption.value = '';
+            allYearOption.textContent = '전체';
+            yearFilter.appendChild(allYearOption);
+            // 년도 옵션 추가 (현재 년도부터 5년 전까지)
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= currentYear - 5; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = `${year}년`;
+                yearFilter.appendChild(option);
+            }
+            // 월 옵션 추가 (전체 포함)
+            const allMonthOption = document.createElement('option');
+            allMonthOption.value = '';
+            allMonthOption.textContent = '전체';
+            monthFilter.appendChild(allMonthOption);
+            for (let month = 1; month <= 12; month++) {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = `${month}월`;
+                monthFilter.appendChild(option);
+            }
+            
+            // 초기값 설정
+            yearFilter.value = selectedYear;
+            monthFilter.value = selectedMonth;
+            
+            // 이벤트 리스너 추가
+            yearFilter.addEventListener('change', (e) => {
+                selectedYear = e.target.value === '' ? '' : parseInt(e.target.value);
+                // 연도에서 전체 선택 시 월도 전체로 초기화
+                if (selectedYear === '') {
+                    monthFilter.value = '';
+                    selectedMonth = '';
+                }
+                currentPage = 1;
+                displayNotices();
+            });
+            
+            monthFilter.addEventListener('change', (e) => {
+                selectedMonth = e.target.value === '' ? '' : parseInt(e.target.value);
+                currentPage = 1;
+                displayNotices();
+            });
+        }
+
+        // 검색 초기화 함수
+        function initSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchIcon = document.querySelector('.search-icon');
+
+            searchInput.addEventListener('input', (e) => {
+                searchKeyword = e.target.value.trim().toLowerCase();
+                currentPage = 1;
+                displayNotices();
+            });
+
+            searchIcon.addEventListener('click', () => {
+                searchInput.focus();
+            });
+        }
+
+        // 담당자 필터 초기화 함수
+        function initManagerFilter() {
+            const managerInput = document.getElementById('managerFilter');
+            managerInput.addEventListener('input', e => {
+                managerFilterValue = e.target.value.trim().toLowerCase();
+                currentPage = 1;
+                displayNotices();
+            });
+        }
+
+        // 공지사항 표시 함수
+        function displayNotices() {
+            const container = document.getElementById('noticeContainer');
+            container.innerHTML = '';
+            let filteredNotices;
+            if (searchKeyword) {
+                // 검색어가 있을 때는 년/월 상관없이 텍스트 기반으로 필터
+                filteredNotices = notices.filter(notice =>
+                    notice.title.toLowerCase().includes(searchKeyword) ||
+                    notice.content.toLowerCase().includes(searchKeyword)
+                );
+            } else {
+                // 검색어 없을 때는 년도/월 필터 적용
+                filteredNotices = notices.filter(notice => {
+                    const noticeDate = new Date(notice.date);
+                    if (selectedYear !== '' && noticeDate.getFullYear() !== selectedYear) return false;
+                    if (selectedMonth !== '' && (noticeDate.getMonth() + 1) !== selectedMonth) return false;
+                    return true;
+                });
+            }
+            // 담당자 필터 적용
+            if (managerFilterValue) {
+                filteredNotices = filteredNotices.filter(notice =>
+                    notice.manager && notice.manager.toLowerCase().includes(managerFilterValue)
+                );
+            }
+            // 페이지네이션 계산
+            const totalItems = filteredNotices.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginated = filteredNotices.slice(startIndex, startIndex + itemsPerPage);
+            if (paginated.length === 0) {
+                container.innerHTML = '<div class="no-notices">검색 결과가 없습니다.</div>';
+                renderPagination(totalPages);
+                return;
+            }
+            paginated.forEach(notice => {
+                const noticeElement = document.createElement('div');
+                noticeElement.className = 'notice-item';
+                noticeElement.innerHTML = `
+                    <h3>
+                        <span>${notice.title}</span>
+                        <button class="expand-btn">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </h3>
+                    <div class="notice-content">${notice.content}</div>
+                    <div class="notice-meta">
+                        <div class="notice-date">
+                            <i class="far fa-calendar-alt"></i>
+                            ${formatDate(notice.date)}
+                        </div>
+                        <div class="notice-manager">
+                            <i class="fas fa-user"></i> ${notice.manager}
+                        </div>
+                        <div class="notice-actions">
+                            <button class="delete-btn">삭제</button>
+                        </div>
+                    </div>
+                `;
+
+                const expandBtn = noticeElement.querySelector('.expand-btn');
+                const noticeContent = noticeElement.querySelector('.notice-content');
+                const noticeMeta = noticeElement.querySelector('.notice-meta');
+
+                expandBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    // Toggle expanded state on the notice item
+                    noticeElement.classList.toggle('expanded');
+                    // Update button icon
+                    if (noticeElement.classList.contains('expanded')) {
+                        expandBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                    } else {
+                        expandBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                    }
+                });
+
+                const deleteBtn = noticeElement.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    deleteNotice(notice.id);
+                });
+
+                container.appendChild(noticeElement);
+            });
+            renderPagination(totalPages);
+        }
+
+        // 페이지네이션 렌더링 함수
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            if (totalPages <= 1) return;
+            // Prev
+            if (currentPage > 1) {
+                const prev = document.createElement('span');
+                prev.className = 'page-link';
+                prev.textContent = 'Prev';
+                prev.addEventListener('click', () => { currentPage--; displayNotices(); });
+                pagination.appendChild(prev);
+            }
+            // 페이지 번호
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.createElement('span');
+                page.className = 'page-link' + (i === currentPage ? ' active' : '');
+                page.textContent = i;
+                page.addEventListener('click', () => { currentPage = i; displayNotices(); });
+                pagination.appendChild(page);
+            }
+            // Next
+            if (currentPage < totalPages) {
+                const next = document.createElement('span');
+                next.className = 'page-link';
+                next.textContent = 'Next';
+                next.addEventListener('click', () => { currentPage++; displayNotices(); });
+                pagination.appendChild(next);
+            }
+        }
+
+        // 공지사항 삭제 함수 수정
+        function deleteNotice(id) {
+            if (confirm('정말로 이 공지사항을 삭제하시겠습니까?')) {
+                notices = notices.filter(notice => notice.id !== id);
+                saveNotices();
+                displayNotices();
+            }
+        }
+
+        // 공지사항 폼 제출 처리 수정
+        document.getElementById('noticeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            const manager = document.getElementById('manager').value.trim();
+            const date = selectedDate;
+            
+            if (!title || !content || !manager) {
+                alert('제목, 내용, 담당자를 모두 입력해주세요.');
+                return;
+            }
+            
+            const notice = {
+                id: Date.now(),
+                title: escapeHtml(title),
+                content: escapeHtml(content),
+                manager: escapeHtml(manager),
+                date: date.toISOString()
+            };
+            
+            notices.unshift(notice);
+            saveNotices();
+            currentPage = 1;                    // 새 글 등록 시 첫 페이지로 이동
+            displayNotices();
+            // 목록 영역으로 부드럽게 스크롤
+            document.getElementById('noticeContainer').scrollIntoView({ behavior: 'smooth' });
+            
+            // 폼 초기화
+            this.reset();
+            selectedDate = new Date();
+            document.getElementById('noticeDate').value = formatDate(selectedDate);
+        });
+    </script>
+</body>
+</html>
